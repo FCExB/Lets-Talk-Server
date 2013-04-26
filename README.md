@@ -1,4 +1,4 @@
-Lets-Talk-Server
+Lets Talk Server
 ================
 
 The server for Lets Talk
