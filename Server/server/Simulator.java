@@ -21,6 +21,7 @@ public class Simulator extends Thread {
 	public Simulator() {
 
 		new Informer(entities, addresses).start();
+        System.out.println("Simulator started");
 	}
 
 	@Override

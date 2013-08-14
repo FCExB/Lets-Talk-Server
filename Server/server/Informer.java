@@ -14,6 +14,7 @@ public class Informer extends Thread {
 	public Informer(Set<Entity> entities, Set<InetAddress> addresses) {
 		this.entities = entities;
 		this.addresses = addresses;
+        System.out.println("Informer started");
 	}
 
 	@Override
