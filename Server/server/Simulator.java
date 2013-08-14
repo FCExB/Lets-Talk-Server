@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.HashSet;
 import java.util.Set;
+import java.text.*;
 
 public class Simulator extends Thread {
 
 	Set<Entity> entities = new HashSet<Entity>();
 
 	Set<InetAddress> addresses = new HashSet<InetAddress>();
+
+    private Informer informer;
 
 	int port = 4445;
 
@@ -20,7 +23,7 @@ public class Simulator extends Thread {
 
 	public Simulator() {
 
-		new Informer(entities, addresses).start();
+		informer = new Informer(entities, addresses);
         System.out.println("Simulator started");
 	}
 
@@ -38,9 +41,37 @@ public class Simulator extends Thread {
 		}
 	}
 
+    private int counter = 0;
+    private double[] fpss = new double[10];
+
 	private void simulate(double delta) {
 
-		double numOfTicks = delta / LENGTH_OF_ONE_TICK;
+		if(Server.DEBUG_MODE) {
+            double fps = 1000/delta;
+            fpss[counter] = fps;
+            counter++;
+
+            if(counter == 10) {
+                double max = 0;
+                double min = Double.MAX_VALUE;
+                double average = 0; 
+                for(double d : fpss) {
+                    average += d;
+                    max = Math.max(max, d);
+                    min = Math.min(min, d);
+                }
+                double range = max-min;
+                average /= 10;
+              
+                System.out.println("FPS = " 
+                        + (int)average + " Range = " + (int)range +
+                        " Max = " + (int)max + 
+                        " Min = " + (int)min);
+                counter = 0;
+            }
+        }
+
+        double numOfTicks = delta / LENGTH_OF_ONE_TICK;
 
 		Entity ball = null;
 		for (Entity entity : entities) {
@@ -94,6 +125,8 @@ public class Simulator extends Thread {
 			ball.velocity.y -= 0.1 * numOfTicks;
 
 		}
+        
+        informer.inform();
 	}
 
 	public void addPlayer(Slime slime) {

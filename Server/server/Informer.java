@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Set;
 
-public class Informer extends Thread {
+public class Informer {
 
 	private static int PORT = 4445;
 
@@ -17,9 +17,8 @@ public class Informer extends Thread {
         System.out.println("Informer started");
 	}
 
-	@Override
-	public void run() {
-		while (true) {
+	public void inform() {
+
 
 			for (Entity entity : entities) {
 				try {
@@ -32,11 +31,11 @@ public class Informer extends Thread {
 			}
 
 			try {
-				Thread.sleep(10);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
-		}
+
 	}
 }
